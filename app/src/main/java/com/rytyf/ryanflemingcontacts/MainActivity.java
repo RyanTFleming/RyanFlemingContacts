@@ -1,6 +1,7 @@
 package com.rytyf.ryanflemingcontacts;
 
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,13 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+
+    private final String NAME = "name";
+    private final String EMAIL = "email";
+    private final String PHONE = "phone";
+    private TextView nameTextView;
+    private TextView emailTextView;
+    private TextView phoneTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +39,10 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        this.nameTextView = (TextView) findViewById(R.id.nameTextView);
+        this.emailTextView = (TextView) findViewById(R.id.emailTextView);
+        this.phoneTextView = (TextView) findViewById(R.id.phoneTextView);
     }
 
     @Override
@@ -70,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
         Editable emailText = emailTextEdit.getText();
         EditText phoneTextEdit = (EditText) findViewById(R.id.phoneTextField);
         Editable phoneText = phoneTextEdit.getText();
-        TextView phoneTextView = (TextView) findViewById(R.id.phoneTextView);
         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         int radioButtonID = radioGroup.getCheckedRadioButtonId();
         RadioButton selectedButton = (RadioButton) findViewById(radioButtonID);
@@ -101,12 +112,27 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        TextView nameTextView = (TextView) findViewById(R.id.nameTextView);
-        nameTextView.setText(nameText);
+        this.nameTextView.setText(nameText);
+        this.emailTextView.setText(emailText);
 
-        TextView emailTextView = (TextView) findViewById(R.id.emailTextView);
-        emailTextView.setText(emailText);
         String phoneType = (String) selectedButton.getText();
-        phoneTextView.setText(phoneText + "(" + phoneType + ")");
+        this.phoneTextView.setText(phoneText + "(" + phoneType + ")");
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putCharSequence(this.NAME, this.nameTextView.getText());
+        outState.putCharSequence(this.EMAIL, this.emailTextView.getText());
+        outState.putCharSequence(this.PHONE, this.phoneTextView.getText());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        this.nameTextView.setText(savedInstanceState.getCharSequence(this.NAME));
+        this.emailTextView.setText(savedInstanceState.getCharSequence(this.EMAIL));
+        this.phoneTextView.setText(savedInstanceState.getCharSequence(this.PHONE));
     }
 }
