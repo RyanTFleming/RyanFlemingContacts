@@ -5,9 +5,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,5 +53,60 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Retrieves the user input from the form and prints it back out in the
+     * saved information section of the GUI.
+     *
+     * @param v - the view control that sent the action.
+     */
+    public void saveButtonOnClick(View v) {
+        boolean isError = false;
+        TextView errorMessage = (TextView) findViewById(R.id.errorMessage);
+        EditText nameTextEdit = (EditText) findViewById(R.id.nameTextField);
+        Editable nameText = nameTextEdit.getText();
+        EditText emailTextEdit = (EditText) findViewById(R.id.emailTextField);
+        Editable emailText = emailTextEdit.getText();
+        EditText phoneTextEdit = (EditText) findViewById(R.id.phoneTextField);
+        Editable phoneText = phoneTextEdit.getText();
+        TextView phoneTextView = (TextView) findViewById(R.id.phoneTextView);
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        int radioButtonID = radioGroup.getCheckedRadioButtonId();
+        RadioButton selectedButton = (RadioButton) findViewById(radioButtonID);
+
+        if (selectedButton == null) {
+
+            errorMessage.setVisibility(View.VISIBLE);
+            isError = true;
+        } else {
+            errorMessage.setVisibility(View.INVISIBLE);
+        }
+
+        if (nameText.length() == 0) {
+            nameTextEdit.setError("Required");
+            isError = true;
+        }
+
+        if (emailText.length() == 0) {
+            emailTextEdit.setError("Required");
+            isError = true;
+        }
+        if (phoneText.length() == 0) {
+            phoneTextEdit.setError("Required");
+            isError = true;
+        }
+
+        if (isError) {
+            return;
+        }
+
+        TextView nameTextView = (TextView) findViewById(R.id.nameTextView);
+        nameTextView.setText(nameText);
+
+        TextView emailTextView = (TextView) findViewById(R.id.emailTextView);
+        emailTextView.setText(emailText);
+        String phoneType = (String) selectedButton.getText();
+        phoneTextView.setText(phoneText + "(" + phoneType + ")");
     }
 }
